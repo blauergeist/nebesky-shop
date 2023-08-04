@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Organic Beard Oil",
+    "description": "This organic beard oil is made with a blend of essential oils that will nourish and condition your beard. It will help to soften your beard, prevent beardruff, and promote beard growth.",
+    "price": 19.99,
+    "quantity": 100,
+    "imageUrl": "https://i.imgur.com/5uE7c1l.jpg",
+    "category": "Beard Oils"
+  },
+  {
+    "name": "Organic Hair Oil",
+    "description": "This organic hair oil is made with a blend of essential oils that will nourish and condition your hair. It will help to soften your hair, prevent dandruff, and promote hair growth.",
+    "price": 19.99,
+    "quantity": 100,
+    "imageUrl": "https://i.imgur.com/sX4288e.jpg",
+    "category": "Hair Oils"
+  },
+  {
+    "name": "Organic Skin Oil",
+    "description": "This organic skin oil is made with a blend of essential oils that will nourish and moisturize your skin. It will help to soften your skin, prevent wrinkles, and promote skin health.",
+    "price": 19.99,
+    "quantity": 100,
+    "imageUrl": "https://i.imgur.com/26s063w.jpg",
+    "category": "Skin Oils"
+  },
+  {
+    "name": "Organic Argan Oil",
+    "description": "This organic argan oil is a multi-purpose oil that can be used for a variety of purposes, including hair care, skin care, and makeup removal. It is a rich source of antioxidants and essential fatty acids, which makes it a great choice for nourishing and moisturizing your skin and hair.",
+    "price": 29.99,
+    "quantity": 100,
+    "imageUrl": "https://i.imgur.com/2k9516X.jpg",
+    "category": "Oils"
+  },
+  {
+    "name": "Organic Jojoba Oil",
+    "description": "This organic jojoba oil is a natural oil that is similar to the sebum produced by your skin. It is a great choice for people with sensitive skin, as it is non-comedogenic, which means it will not clog your pores. Jojoba oil is also a good choice for people with eczema or psoriasis, as it can help to reduce inflammation.",
+    "price": 19.99,
+    "quantity": 100,
+    "imageUrl": "https://i.imgur.com/f513z5I.jpg",
+    "category": "Oils"
+  },
+  {
+    "name": "Organic Coconut Oil",
+    "description": "This organic coconut oil is a versatile oil that can be used for a variety of purposes, including cooking, beauty, and hair care. It is a good source of saturated fat, which makes it a great choice for people who are looking for a healthy oil to cook with. Coconut oil is also a good choice for people with dry skin, as it can help to moisturize your skin.",
+    "price": 19.99,
+    "quantity": 100,
+    "imageUrl": "https://i.imgur.com/3m4544s.jpg",
+    "category": "Oils"
+  }
+]

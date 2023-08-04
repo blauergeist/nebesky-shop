@@ -1,0 +1,17 @@
+extends base
+
+block content
+    main.main
+        .card-container
+            if cart.items.length > 0
+                each item in cart.items
+                    .card 
+                        .card__details
+                            h2.card__text #{item.product.name}
+                            p.card__data Price: $#{item.product.price}
+                            p.card__data Quantity: #{item.quantity}
+                // Add any additional product details you want to display here
+            else
+                p Your cart is empty.
+            if cart.items.length > 0
+                button.btn.btn--green#proceed-checkout Proceed to checkout
