@@ -12148,22 +12148,11 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 var addToCart = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(productId) {
-    var data;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.prev = 0;
-          data = {};
-          _context.next = 4;
-          return _axios.default.post('http://127.0.0.1:3000/api/v1/cart', data, {
-            withCredentials: true // Include credentials (session cookie) in the request
-          }).then(function (response) {
-            console.log(response);
-          }).catch(function (error) {
-            console.log(error);
-          });
-        case 4:
-          _context.next = 6;
+          _context.next = 3;
           return _axios.default.post('http://127.0.0.1:3000/api/v1/cartItem', {
             productId: productId,
             quantity: 1
@@ -12172,19 +12161,19 @@ var addToCart = /*#__PURE__*/function () {
           }).catch(function (error) {
             console.log(error);
           });
-        case 6:
-          _context.next = 12;
+        case 3:
+          _context.next = 9;
           break;
-        case 8:
-          _context.prev = 8;
+        case 5:
+          _context.prev = 5;
           _context.t0 = _context["catch"](0);
           console.log(_context.t0);
           (0, _alerts.showAlert)('error', _context.t0);
-        case 12:
+        case 9:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 8]]);
+    }, _callee, null, [[0, 5]]);
   }));
   return function addToCart(_x) {
     return _ref.apply(this, arguments);

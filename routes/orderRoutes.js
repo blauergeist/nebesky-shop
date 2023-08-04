@@ -2,8 +2,13 @@ const express = require('express');
 const orderController = require('../controllers/orderController');
 const authController = require('../controllers/authController');
 
-const { createOrder, getAllOrders, getOrderById, getCheckoutSession } =
-  orderController;
+const {
+  createOrder,
+  getAllOrders,
+  getMyOrders,
+  getOrderById,
+  getCheckoutSession,
+} = orderController;
 
 const { protect, isLoggedIn, restrictTo } = authController;
 
@@ -16,6 +21,8 @@ router
   .get(restrictTo('admin'), protect, getAllOrders)
   .post(protect, createOrder);
 
-router.route('/:orderId').get(getOrderById);
+router.route('/my-orders', protect, getMyOrders);
+
+//router.route('/:orderId').get(getOrderById);
 
 module.exports = router;

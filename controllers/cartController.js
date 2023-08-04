@@ -8,8 +8,9 @@ exports.getAllCarts = factory.getAll(Cart);
 
 // // createCart: Create a new cart for a user.
 exports.initCart = catchAsync(async (req, res, next) => {
+  if (req.session.cartId) return next();
+
   const { user } = req;
-  // console.log(user);
   let cart;
 
   // need to refactor this, wrote it temporary for readibility
@@ -23,19 +24,14 @@ exports.initCart = catchAsync(async (req, res, next) => {
     }
 
     req.session.cartId = cart._id;
-    return res.status(200).json(cart);
   } else if (!req.session.cartId && !user) {
     cart = new Cart({ items: [] });
-
     await cart.save();
-    req.session.cartId = cart._id;
 
-    return res.status(200).json(cart);
+    req.session.cartId = cart._id;
   }
 
-  cart = await Cart.findById(req.session.cartId);
-
-  res.status(200).json(cart);
+  next();
 });
 
 // getCartById: Retrieve a user's cart by its ID.

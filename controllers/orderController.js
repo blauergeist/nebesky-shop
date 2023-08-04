@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const Order = require('../models/orderModel');
 const Cart = require('../models/cartModel');
 const CartItem = require('../models/cartItemModel');
+const factory = require('./handlerFactory');
 
 // Create a new order
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
@@ -106,7 +107,10 @@ exports.createOrder = catchAsync(async (req, res, next) => {
 });
 
 // Get all orders for a user
-exports.getAllOrders = catchAsync(async (req, res, next) => {
+exports.getAllOrders = factory.getAll(Order);
+
+// Find orders per user
+exports.getMyOrders = catchAsync(async (req, res, next) => {
   const { user } = req;
 
   // Find all orders associated with the user

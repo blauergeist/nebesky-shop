@@ -9,7 +9,9 @@ const { protect, isLoggedIn, restrictTo } = authController;
 
 const router = express.Router();
 
-router.route('/').get(getAllCarts).post(isLoggedIn, initCart);
+router.route('/').get(isLoggedIn, initCart);
+
+router.route('/allCarts').get(restrictTo('admin'), getAllCarts);
 
 router.route('/test-session').get((req, res, next) => {
   req.session.testValue = 'This is a session test value';
