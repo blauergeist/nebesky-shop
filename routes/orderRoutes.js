@@ -16,12 +16,9 @@ const router = express.Router();
 
 router.route('/checkout-session').get(getCheckoutSession);
 
-router
-  .route('/')
-  .get(restrictTo('admin'), protect, getAllOrders)
-  .post(protect, createOrder);
+router.route('/').get(restrictTo('admin'), getAllOrders); //.post(createOrder) -> current logic creates orders in a middleware stack in viewRoutes, will be revisited once deployed due to stripe api
 
-router.route('/my-orders', protect, getMyOrders);
+router.route('/my-orders').get(protect, getMyOrders);
 
 //router.route('/:orderId').get(getOrderById);
 

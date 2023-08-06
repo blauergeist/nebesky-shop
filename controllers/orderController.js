@@ -8,8 +8,6 @@ const factory = require('./handlerFactory');
 
 // Create a new order
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
-  const { shippingAddress } = req.body;
-  const { user } = req;
   const { cartId } = req.session;
   const email = req.user ? req.user.email : req.body.contactEmail;
 
@@ -125,7 +123,9 @@ exports.getOrderById = catchAsync(async (req, res, next) => {
   const { orderId } = req.body;
 
   // Match the order by ID
-  const order = await Order.find({ id: orderId });
+  const order = await Order.find({ user: user.id, id: orderId }).populate(
+    'items.product'
+  );
 
   res.status(200).json(order);
 });

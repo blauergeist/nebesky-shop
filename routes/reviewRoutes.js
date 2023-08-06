@@ -16,9 +16,10 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(getAllReviews)
+  .get(restrictTo('admin'), getAllReviews)
   .post(protect, restrictTo('user'), createReview);
 
+// task - verify review routers and auth
 router
   .route('/:id')
   .get(getReviewById)

@@ -9,8 +9,6 @@ const { protect, isLoggedIn, restrictTo } = authController;
 
 const router = express.Router();
 
-router.route('/').get(isLoggedIn, initCart);
-
 router.route('/allCarts').get(restrictTo('admin'), getAllCarts);
 
 router.route('/test-session').get((req, res, next) => {

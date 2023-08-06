@@ -12,8 +12,8 @@ const router = express.Router();
 router
   .route('/')
   .get(getAllCategories)
-  .post(createCategory)
-  .patch(updateCategory)
-  .delete(deleteCategory);
+  .post(restrictTo('admin'), createCategory)
+  .patch(restrictTo('admin'), updateCategory)
+  .delete(restrictTo('admin'), deleteCategory);
 
 module.exports = router;
