@@ -12156,10 +12156,13 @@ var addToCart = /*#__PURE__*/function () {
           return _axios.default.post('http://127.0.0.1:3000/api/v1/cartItem', {
             productId: productId,
             quantity: 1
-          }).then(function (response) {
-            console.log(response.data);
+          }).then(function (res) {
+            console.log(res);
+            if (res.status === 200) {
+              (0, _alerts.showAlert)('success', 'Added to cart succesfully!');
+            }
           }).catch(function (error) {
-            console.log(error);
+            (0, _alerts.showAlert)('error', 'Adding to cart failed!');
           });
         case 3:
           _context.next = 9;
@@ -12379,7 +12382,8 @@ var loginForm = document.querySelector('.form--login');
 var logOutBtn = document.querySelector('.nav__el--logout');
 var userDataForm = document.querySelector('.form-user-data');
 var userPasswordForm = document.querySelector('.form-user-password');
-var addToCartBtn = document.getElementById('add-to-cart');
+// const addToCartBtn = document.getElementById('add-to-cart');
+var addToCartBtns = document.querySelectorAll('.add-to-cart');
 var checkoutCartBtn = document.getElementById('proceed-checkout');
 
 // Delegation
@@ -12434,11 +12438,12 @@ if (userPasswordForm) userPasswordForm.addEventListener('submit', /*#__PURE__*/f
     return _ref.apply(this, arguments);
   };
 }());
-if (addToCartBtn) {
-  addToCartBtn.addEventListener('click', function (e) {
-    e.target.textContent = "Processing...";
-    var productId = e.target.dataset.productId;
-    (0, _cart.addToCart)(productId);
+if (addToCartBtns) {
+  addToCartBtns.forEach(function (button) {
+    button.addEventListener('click', function (e) {
+      var productId = e.target.dataset.productId;
+      (0, _cart.addToCart)(productId);
+    });
   });
 }
 if (checkoutCartBtn) {
@@ -12472,7 +12477,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60646" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49997" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

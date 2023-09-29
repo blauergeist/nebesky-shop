@@ -3,15 +3,34 @@ extends base
 block content
     main.main
         .card-container
+            - let total = 0
             if cart.items.length > 0
                 each item in cart.items
-                    .card 
-                        .card__details
-                            h2.card__text #{item.product.name}
-                            p.card__data Price: $#{item.product.price}
-                            p.card__data Quantity: #{item.quantity}
-                // Add any additional product details you want to display here
+                  - let subtotal = Math.round((item.product.price * item.quantity) * 100) / 100; // Calculate the subtotal for each item
+                  - total += subtotal
+
+                    .card
+                        .card__header
+                            .card__picture
+                                .card__picture-overlay &nbsp;
+                                img.card__picture-img(src=`/img/products/${item.product.imageUrl}`, alt=`${item.product.name}`)
+                            h3.heading-tertirary
+                                span= item.product.name
+
+                        .card__footer
+                            p.cart__amount
+                                span.card__footer-value= `$${subtotal}`
+                                | 
+                                span.card__footer-text= `(${item.quantity} x $${item.product.price})`
+                            a.btn.btn--green.btn--secondary(href=`/product/${item.product.slug}`) Details
+                div.checkout__section
+                        .card
+                            .card__details.card__checkout
+                                h2.heading-secondary#total Total: $#{total}
+                                button.btn.btn--green#proceed-checkout CHECKOUT
             else
-                p Your cart is empty.
-            if cart.items.length > 0
-                button.btn.btn--green#proceed-checkout Proceed to checkout
+                .error
+                    .error__title
+                        h2.heading-secondary.heading-secondary--error Cart empty  
+                    .error__msg Add items to your cart!
+

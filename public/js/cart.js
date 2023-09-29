@@ -8,11 +8,14 @@ export const addToCart = async (productId) => {
         productId,
         quantity: 1,
       })
-      .then(function (response) {
-        console.log(response.data);
+      .then(function (res) {
+        console.log(res);
+        if (res.status === 200) {
+          showAlert('success', 'Added to cart succesfully!');
+        }
       })
       .catch(function (error) {
-        console.log(error);
+        showAlert('error', 'Adding to cart failed!');
       });
   } catch (error) {
     console.log(error);

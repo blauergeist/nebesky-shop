@@ -10,7 +10,8 @@ const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
-const addToCartBtn = document.getElementById('add-to-cart');
+// const addToCartBtn = document.getElementById('add-to-cart');
+const addToCartBtns = document.querySelectorAll('.add-to-cart');
 const checkoutCartBtn = document.getElementById('proceed-checkout');
 
 // Delegation
@@ -57,12 +58,12 @@ if (userPasswordForm)
     document.getElementById('password-confirm').value = '';
   });
 
-if (addToCartBtn) {
-  addToCartBtn.addEventListener('click', (e) => {
-    e.target.textContent = `Processing...`;
-
-    const { productId } = e.target.dataset;
-    addToCart(productId);
+if (addToCartBtns) {
+  addToCartBtns.forEach((button) => {
+    button.addEventListener('click', (e) => {
+      const { productId } = e.target.dataset;
+      addToCart(productId);
+    });
   });
 }
 

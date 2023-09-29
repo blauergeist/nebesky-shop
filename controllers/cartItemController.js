@@ -55,8 +55,6 @@ exports.createCartItem = catchAsync(async (req, res, next) => {
   // if (oldCartItem) oldCartItem.quantity = existingCartItem.quantity;
   // await cart.save();
 
-  // TASK - when order is created, next cart is not filled with newly created cartItems
-
   const cartItem = await CartItem.addItemToCart(cartId, productId, quantity);
   return res.status(200).json(cartItem);
 });
