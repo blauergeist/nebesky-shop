@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const Product = require('./productModel'); // Import the Product model
+const slugify = require('slugify');
 
 const orderSchema = new mongoose.Schema({
   user: {
@@ -41,6 +43,7 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
+      productName: String, // Added field to store the product name
     },
   ],
   paymentStatus: {
@@ -48,9 +51,23 @@ const orderSchema = new mongoose.Schema({
     required: true,
   },
   fulfilled: {
-    type: String,
-    default: 'No',
+    type: Boolean,
+    default: false,
   },
+  fulfillmentDate: {
+    type: Date,
+    default: null,
+  },
+});
+
+// Populate the product field to get the product object and then extract productName
+orderSchema.pre('find', function (next) {
+  this.populate({
+    path: 'items.product',
+    model: Product,
+    select: 'name', // Select only the 'name' field from the Product model
+  });
+  next();
 });
 
 const Order = mongoose.model('Order', orderSchema);

@@ -59,6 +59,13 @@ exports.getOne = (Model, popOptions) =>
         for (const option of popOptions) {
           query = query.populate(option);
         }
+      } else if (popOptions.includes('.')) {
+        // checks for nested population
+        const options = popOptions.split('.');
+        query = query.populate({
+          path: options[0],
+          populate: { path: options[1] },
+        });
       } else {
         query = query.populate(popOptions);
       }
@@ -75,22 +82,52 @@ exports.getOne = (Model, popOptions) =>
     });
   });
 
-exports.getAll = (Model) =>
+// exports.getAll = (Model) =>
+//   catchAsync(async (req, res, next) => {
+//     // To allow for nested GET reviews on tour
+//     let filter = {};
+//     if (req.params.tourId) filter = { tour: req.params.tourId };
+
+//     // Execute query
+//     const features = new APIFeatures(Model.find(filter), req.query)
+//       .filter()
+//       .sort()
+//       .limitFields()
+//       .paginate();
+
+//     const document = await features.query;
+//     //  For DB performance details add .explain() to the end of query:
+//     //  const document = await features.query.explain();
+
+//     res.status(200).json({
+//       status: 'success',
+//       results: document.length,
+//       data: {
+//         document,
+//       },
+//     });
+//   });
+
+exports.getAll = (Model, populateOptions) =>
   catchAsync(async (req, res, next) => {
     // To allow for nested GET reviews on tour
     let filter = {};
     if (req.params.tourId) filter = { tour: req.params.tourId };
 
     // Execute query
-    const features = new APIFeatures(Model.find(filter), req.query)
+    let query = Model.find(filter);
+
+    if (populateOptions) {
+      query = query.populate(populateOptions);
+    }
+
+    const features = new APIFeatures(query, req.query)
       .filter()
       .sort()
       .limitFields()
       .paginate();
 
     const document = await features.query;
-    //  For DB performance details add .explain() to the end of query:
-    //  const document = await features.query.explain();
 
     res.status(200).json({
       status: 'success',

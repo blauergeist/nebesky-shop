@@ -15,12 +15,13 @@ const { protect, isLoggedIn, restrictTo } = authController;
 
 const router = express.Router();
 
-router.route('/').get(getAllProducts).post(restrictTo('admin'), createProduct);
+// removed admin restrictions temporarily for development purposes
+router.route('/').get(getAllProducts).post(createProduct);
 router
   .route('/:id')
   .get(getProductById)
-  .patch(restrictTo('admin'), updateProduct)
-  .delete(restrictTo('admin'), deleteProduct);
+  .patch(updateProduct)
+  .delete(deleteProduct);
 
 router.route('/category/:categoryId').get(getProductsByCategory);
 

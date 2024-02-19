@@ -30,7 +30,7 @@ app.set('views', path.join(__dirname, 'views'));
 // 1. Middleware (global)
 
 // Set security http headers
-//app.use(cors({ credentials: true, origin: 'https://localhost:3000' }));
+app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
 
 app.use(helmet({ contentSecurityPolicy: false }));
 
@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Limit requests from per IP
 const limiter = rateLimit({
-  max: 100,
+  max: 1000,
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests! Please try again in an hour.',
 });

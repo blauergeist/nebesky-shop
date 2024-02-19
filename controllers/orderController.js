@@ -105,30 +105,128 @@ exports.createOrder = catchAsync(async (req, res, next) => {
 });
 
 // Get all orders for a user
-exports.getAllOrders = factory.getAll(Order);
+//exports.getAllOrders = factory.getAll(Order, { path: 'user' });
+
+//Controller function to handle pagination logic
+// exports.getAllOrders = async (req, res, next) => {
+//   const page = req.query.page ? parseInt(req.query.page, 10) : 1;
+//   const pageSize = process.env.PAGE_SIZE; // Define your page size constant
+
+//   try {
+//     const totalCount = await Order.countDocuments(); // Get total count of orders
+
+//     const totalPages = Math.ceil(totalCount / pageSize);
+//     const skip = (page - 1) * pageSize;
+
+//     const orders = await Order.find()
+//       .skip(skip)
+//       .limit(pageSize)
+//       .populate('user')
+//       // Add any other sorting or projection logic if needed
+//       .exec();
+
+//     res.json({
+//       orders,
+//       totalPages,
+//       currentPage: page,
+//       totalCount,
+//     });
+//   } catch (err) {
+//     // Handle any errors that occur during the process
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// };
+
+exports.getAllOrders = async (req, res, next) => {
+  const page = req.query.page ? parseInt(req.query.page, 10) : 1;
+  const pageSize = process.env.PAGE_SIZE; // Define your page size constant
+
+  try {
+    let query = Order.find();
+
+    // Filtering by status
+    const orderStatus = req.query.orderStatus;
+    if (orderStatus && orderStatus !== 'all') {
+      let orderStatusBool = orderStatus === 'fulfilled' ? true : false;
+      query = query.where('fulfilled').equals(orderStatusBool);
+    } else if (orderStatus === 'all') {
+      // If 'orderStatus' is 'all', do not apply any status filter
+      // Clear any previously applied status filters
+      query = query.where('fulfilled'); // This condition will match all (true/false)
+    }
+
+    // Sorting by date or amount
+    const sortBy = req.query.sortBy;
+    if (sortBy) {
+      const [field, order] = sortBy.split('-');
+      query = query.sort({ [field]: order === 'desc' ? -1 : 1 });
+    }
+
+    const totalCount = await Order.countDocuments(query); // Get total count of orders based on the query
+
+    const totalPages = Math.ceil(totalCount / pageSize);
+    const skip = (page - 1) * pageSize;
+
+    const orders = await query
+      .skip(skip)
+      .limit(pageSize)
+      .populate('user')
+      // Add any other projection logic if needed
+      .exec();
+
+    res.json({
+      orders,
+      totalPages,
+      currentPage: page,
+      totalCount,
+    });
+  } catch (err) {
+    // Handle any errors that occur during the process
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 // Find orders per user
 exports.getMyOrders = catchAsync(async (req, res, next) => {
   const { user } = req;
 
   // Find all orders associated with the user
-  const orders = await Order.find({ user: user.id }).populate('items.product');
+  const orders = await Order.find({ user: user.id }).populate('items');
 
-  res.status(200).json({ orders });
+  res.status(200).json(orders);
+});
+
+exports.getOrdersAfterDate = catchAsync(async (req, res, next) => {
+  try {
+    const { startDate } = req.query;
+
+    const fromDate = new Date(startDate);
+
+    if (isNaN(fromDate.getTime())) {
+      return res.status(400).json({ error: 'Invalid date format' });
+    }
+
+    const orders = await Order.find({ orderDate: { $gte: fromDate } });
+    res.status(200).json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Get a single order by ID
-exports.getOrderById = catchAsync(async (req, res, next) => {
-  // Get order ID from request body
-  const { orderId } = req.body;
+// exports.getOrderById = catchAsync(async (req, res, next) => {
+//   // Get order ID from request body
+//   const { orderId } = req.body;
 
-  // Match the order by ID
-  const order = await Order.find({ user: user.id, id: orderId }).populate(
-    'items.product'
-  );
+//   // Match the order by ID
+//   const order = await Order.find({ user: user.id, id: orderId }).populate(
+//     'items.product'
+//   );
 
-  res.status(200).json(order);
-});
+//   res.status(200).json(order);
+// });
+
+exports.getOrderById = factory.getOne(Order, 'items.product');
 
 const formatShippingAddress = (shippingDetails) => {
   const address = shippingDetails;
@@ -144,3 +242,66 @@ const formatShippingAddress = (shippingDetails) => {
 
   return addressString;
 };
+
+// Helper function to get today's date at midnight
+const getTodayStart = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return today;
+};
+
+// Helper function to get tomorrow's date at midnight
+const getTomorrowStart = () => {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+  return tomorrow;
+};
+
+// Function to fetch today's orders activity
+exports.getTodaysOrdersActivity = async (req, res, next) => {
+  try {
+    const todayStart = getTodayStart();
+    const tomorrowStart = getTomorrowStart();
+
+    const todaysOrders = await Order.find({
+      $or: [
+        {
+          orderDate: {
+            $gte: todayStart,
+            $lt: tomorrowStart,
+          },
+        },
+        {
+          fulfillmentDate: {
+            $gte: todayStart,
+            $lt: tomorrowStart,
+          },
+        },
+      ],
+    }).populate({
+      path: 'items.product',
+      model: 'Product',
+      select: 'name', // Adjust if you need more fields from the Product
+    });
+
+    // Sending response back to the client
+    res.status(200).json({
+      status: 'success',
+      results: todaysOrders.length,
+      data: {
+        orders: todaysOrders,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching today's orders:", error);
+    // Passing error to Express error handling middleware
+    next(error);
+  }
+};
+
+// Update an order
+exports.updateOrder = factory.updateOne(Order);
+
+// Delete an order
+exports.deleteOrder = factory.deleteOne(Order);

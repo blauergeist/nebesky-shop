@@ -13,7 +13,11 @@ exports.initCart = catchAsync(async (req, res, next) => {
   const { user } = req;
   let cart;
 
-  // need to refactor this, wrote it temporary for readibility
+  // Need to refactor this, wrote it temporary for readability
+  // If there is no cart for the session, but the user is logged in, check if there is an existing cart for the user
+  // If there is no cart for the existing user, create a new cart and save the cart ID to the session
+  // If there is no cart and the user is not logged in, create a new cart and save the cart ID to the session
+
   if (!req.session.cartId && user) {
     cart = await Cart.findOne({
       $and: [{ user: user.id }, { isActive: true }],
@@ -30,6 +34,21 @@ exports.initCart = catchAsync(async (req, res, next) => {
 
     req.session.cartId = cart._id;
   }
+
+  // Refactored, need to test
+  // if (!req.session.cartId) {
+  //   if (user) {
+  //     cart = await Cart.findOne({ user: user.id, isActive: true });
+  //     if (!cart) {
+  //       cart = await Cart.create({ user: user.id, items: [] });
+  //     }
+  //   } else {
+  //     cart = new Cart({ items: [] });
+  //     await cart.save();
+  //   }
+
+  //   req.session.cartId = cart._id;
+  // }
 
   next();
 });
