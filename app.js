@@ -30,7 +30,14 @@ app.set('views', path.join(__dirname, 'views'));
 // 1. Middleware (global)
 
 // Set security http headers
-app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
+// app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
+
+app.use(
+  cors({
+    origin: 'http://127.0.0.1:5173',
+    credentials: true, // Allow credentials (cookies)
+  })
+);
 
 app.use(helmet({ contentSecurityPolicy: false }));
 
